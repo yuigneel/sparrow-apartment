@@ -1,0 +1,49 @@
+package com.yulgnier.web.admin.controller.apartment;
+
+
+import com.yulgnier.common.result.Result;
+import com.yulgnier.model.entity.FeeKey;
+import com.yulgnier.model.entity.FeeValue;
+import com.yulgnier.web.admin.vo.fee.FeeKeyVo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Tag(name = "房间杂费管理")
+@RestController
+@RequestMapping("/admin/fee")
+public class FeeController {
+
+    @Operation(summary = "保存或更新杂费名称")
+    @PostMapping("key/saveOrUpdate")
+    public Result saveOrUpdateFeeKey(@RequestBody FeeKey feeKey) {
+        return Result.ok();
+    }
+
+    @Operation(summary = "保存或更新杂费值")
+    @PostMapping("value/saveOrUpdate")
+    public Result saveOrUpdateFeeValue(@RequestBody FeeValue feeValue) {
+        return Result.ok();
+    }
+
+
+    @Operation(summary = "查询全部杂费名称和杂费值列表")
+    @GetMapping("list")
+    public Result<List<FeeKeyVo>> feeInfoList() {
+        return Result.ok();
+    }
+
+    @Operation(summary = "根据id删除杂费名称")
+    @DeleteMapping("key/deleteById")
+    public Result deleteFeeKeyById(@RequestParam Long feeKeyId) {
+        return Result.ok();
+    }
+
+    @Operation(summary = "根据id删除杂费值")
+    @DeleteMapping("value/deleteById")
+    public Result deleteFeeValueById(@RequestParam Long id) {
+        return Result.ok();
+    }
+}

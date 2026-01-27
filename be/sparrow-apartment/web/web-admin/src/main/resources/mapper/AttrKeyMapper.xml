@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yulgnier.web.admin.mapper.AttrKeyMapper">
+
+    <resultMap id="AttrKeyVo" type="com.yulgnier.web.admin.vo.attr.AttrKeyVo" autoMapping="true">
+        <!-- 关键：给AttrKey的主键id加<id>标签，让MyBatis识别唯一的AttrKey
+            否则就会认为两条相同id的是不同的，会导致数据重复 （yulgnier）
+                1,面积,1,25平,1
+                1,面积,2,35平,1
+                2,朝向,3,朝南,2
+                2,朝向,4,朝北,2
+        -->
+        <id property="id" column="id"/>
+        <collection property="attrValueList" ofType="com.yulgnier.model.entity.AttrValue">
+            <id property="id" column="attrValueId"/>
+            <result property="name" column="attrValueName"/>
+            <result property="attrKeyId" column="attr_key_id"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="listAttrInfo" resultMap="AttrKeyVo">
+        select k.id,
+               k.name,
+               v.id   as attrValueId,
+               v.name as attrValueName,
+               v.attr_key_id
+        from attr_key k
+                 left join attr_value v on k.id = v.attr_key_id and v.is_deleted = 0
+        where k.is_deleted = 0
+    </select>
+
+</mapper>
