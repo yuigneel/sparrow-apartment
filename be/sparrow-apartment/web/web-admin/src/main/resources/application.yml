@@ -4,7 +4,7 @@ server:
 spring:
   # 启用哪一个环境配置, dev为开发环境 test为测试环境  prod为生产环境   uat为用户验收环境
   profiles:
-    active:  dev
+    active: dev
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/sparrow_rental?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
@@ -22,3 +22,20 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+# MinIO 对象存储配置
+minio:
+  # MinIO 服务的 API 访问地址（格式：http://IP:端口，默认端口9000）
+  # 示例：本地部署填 http://127.0.0.1:9000；服务器部署填 http://192.168.10.101:9000
+  endpoint: http://127.0.0.1:9000
+  # MinIO 账号（对应启动时设置的 MINIO_ROOT_USER，默认是 minioadmin）
+  access-key: ${sparrow.minio.access-key}
+  # MinIO 密码（对应启动时设置的 MINIO_ROOT_PASSWORD，默认是 minioadmin，正式环境建议修改）
+  secret-key: ${sparrow.minio.secret-key}
+  # 默认使用的存储桶名称（需提前在 MinIO 控制台创建好）
+  bucket-name: ${sparrow.minio.bucket-name}
+  # 可选配置：是否启用 SSL（HTTPS 访问，默认 false，本地测试一般用 HTTP）
+  secure: false
+  # 可选配置：是否启用路径样式访问（旧版 MinIO 需开启，新版默认是虚拟主机模式，一般保持 false 即可）
+  path-style-access: false

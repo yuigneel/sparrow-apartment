@@ -3,6 +3,9 @@ package com.yulgnier.web.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yulgnier.model.entity.FeeKey;
+import com.yulgnier.web.admin.vo.fee.FeeKeyVo;
+
+import java.util.List;
 
 /**
 * @author liubo
@@ -11,4 +14,5 @@ import com.yulgnier.model.entity.FeeKey;
 */
 public interface FeeKeyService extends IService<FeeKey> {
 
+    List<FeeKeyVo> feeInfoList();
 }

@@ -3,8 +3,6 @@ package com.yulgnier.web.admin;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-
 
 /**
  * 麻雀租赁项目启动类
@@ -17,13 +15,34 @@ import org.springframework.context.annotation.ComponentScan;
 // 若使用MyBatis-Plus，需添加@MapperScan（可选，根据你的项目依赖）
 // import org.mybatis.spring.annotation.MapperScan;
 // 若用MyBatis-Plus，需添加@MapperScan指定Mapper接口所在包（比如：@MapperScan("com.sparrow.rental.mapper")）
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.yulgnier.web.admin", "com.yulgnier.common.minio"})
 @MapperScan("com.yulgnier.web.admin.mapper")
 public class AdminWebApplication {
     // 项目入口main方法：启动Spring Boot应用
     public static void main(String[] args) {
-        // 启动Spring容器，加载配置并初始化所有组件
         SpringApplication.run(AdminWebApplication.class, args);
+        /*
+        // 1. 启动Spring容器，获取上下文对象（关键：只有拿到上下文才能手动获取Bean）
+        ConfigurableApplicationContext context = SpringApplication.run(AdminWebApplication.class, args);
+
+        // 2. 打印启动成功提示
+        System.out.println("========Spring Boot 启动成功！============");
+        System.out.println("======== 开始测验MinIO工具类    ============");
+
+        // 3. 从Spring上下文中手动获取MinioUtils Bean（main方法中唯一正确的方式）
+        MinioUtils yulgnier = context.getBean(MinioUtils.class);
+
+        // 4. 调用MinioUtils方法测试（示例：查询所有桶）
+        try {
+            // 测试查询所有Bucket
+            System.out.println("MinIO所有存储桶：" + yulgnier.listAllBuckets());
+
+
+            System.out.println("======== MinIO工具类测试完成    ============");
+        } catch (Exception e) {
+            System.err.println("MinIO测试失败：" + e.getMessage());
+        }
+         */
     }
 }
 

@@ -3,6 +3,9 @@ package com.yulgnier.web.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yulgnier.model.entity.FeeKey;
+import com.yulgnier.web.admin.vo.fee.FeeKeyVo;
+
+import java.util.List;
 
 /**
 * @author liubo
@@ -12,6 +15,7 @@ import com.yulgnier.model.entity.FeeKey;
 */
 public interface FeeKeyMapper extends BaseMapper<FeeKey> {
 
+    List<FeeKeyVo> feeInfoList();
 }
 
 
