@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yulgnier.common.result.Result;
 import com.yulgnier.model.enmu.ReleaseStatus;
 import com.yulgnier.model.entity.ApartmentInfo;
+import com.yulgnier.web.admin.service.ApartmentInfoService;
 import com.yulgnier.web.admin.vo.apartment.ApartmentDetailVo;
 import com.yulgnier.web.admin.vo.apartment.ApartmentItemVo;
 import com.yulgnier.web.admin.vo.apartment.ApartmentQueryVo;
 import com.yulgnier.web.admin.vo.apartment.ApartmentSubmitVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,12 @@ import java.util.List;
 @RequestMapping("/admin/apartment")
 public class ApartmentController {
 
+    @Autowired
+    private ApartmentInfoService apartmentInfoService;
     @Operation(summary = "保存或更新公寓信息")
     @PostMapping("saveOrUpdate")
     public Result saveOrUpdate(@RequestBody ApartmentSubmitVo apartmentSubmitVo) {
+        apartmentInfoService.saveOrUpdateApartment(apartmentSubmitVo);
         return Result.ok();
     }
 

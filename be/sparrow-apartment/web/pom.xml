@@ -20,12 +20,6 @@
 
     <dependencies>
 
-        <!-- spring boot web 启动依赖  -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <!-- spring boot 测试依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

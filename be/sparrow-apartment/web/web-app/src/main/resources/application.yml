@@ -22,3 +22,13 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 禁用Spring Boot Admin MBean以避免冲突
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: ""
+  endpoint:
+    shutdown:
+      enabled: false

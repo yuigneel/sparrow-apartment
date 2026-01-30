@@ -3,6 +3,7 @@ package com.yulgnier.web.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yulgnier.model.entity.ApartmentInfo;
+import com.yulgnier.web.admin.vo.apartment.ApartmentSubmitVo;
 
 /**
 * @author liubo
@@ -11,4 +12,5 @@ import com.yulgnier.model.entity.ApartmentInfo;
 */
 public interface ApartmentInfoService extends IService<ApartmentInfo> {
 
+    void saveOrUpdateApartment(ApartmentSubmitVo apartmentSubmitVo);
 }

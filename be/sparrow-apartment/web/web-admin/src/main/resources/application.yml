@@ -18,10 +18,26 @@ spring:
       maximum-pool-size: 12 #连接池最大连接数，默认是10
       minimum-idle: 10 #最小空闲连接数量
       pool-name: SPHHikariPool # 连接池名称
+  servlet:
+    multipart:
+      # 单个文件最大上传大小（建议设为比你需要的文件稍大，比如50MB）
+      max-file-size: 50MB
+      # 单次请求（可以多文件上传）的总大小上限（建议比单个文件大，比如100MB）
+      max-request-size: 100MB
 # 用于打印框架生成的sql语句，便于调试
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 禁用Spring Boot Admin MBean以避免冲突
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: ""
+  endpoint:
+    shutdown:
+      enabled: false
 
 
 # MinIO 对象存储配置
