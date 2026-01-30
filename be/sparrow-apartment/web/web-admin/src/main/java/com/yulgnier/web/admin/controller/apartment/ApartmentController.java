@@ -2,6 +2,7 @@ package com.yulgnier.web.admin.controller.apartment;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yulgnier.common.result.Result;
 import com.yulgnier.model.enmu.ReleaseStatus;
 import com.yulgnier.model.entity.ApartmentInfo;
@@ -12,11 +13,12 @@ import com.yulgnier.web.admin.vo.apartment.ApartmentQueryVo;
 import com.yulgnier.web.admin.vo.apartment.ApartmentSubmitVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @Tag(name = "公寓信息管理")
 @RestController
 @RequestMapping("/admin/apartment")
@@ -34,7 +36,13 @@ public class ApartmentController {
     @Operation(summary = "根据条件分页查询公寓列表")
     @GetMapping("pageItem")
     public Result<IPage<ApartmentItemVo>> pageItem(@RequestParam long current, @RequestParam long size, ApartmentQueryVo queryVo) {
-        return Result.ok();
+        // 打印入参：确认current/size/queryVo是否符合预期
+        log.info("分页入参：current={}, size={}, queryVo={}", current, size, queryVo);
+        Page<ApartmentItemVo> apartmentItemVoPage = new Page<>(current, size);
+        IPage<ApartmentItemVo> result = apartmentInfoService.pageItem(apartmentItemVoPage, queryVo);
+        // 打印出参：确认总条数、数据列表是否为空
+        log.info("分页出参：总条数={}, 总页数={}, 数据列表={}", result.getTotal(), result.getPages(), result.getRecords());
+        return Result.ok(result);
     }
 
     @Operation(summary = "根据ID获取公寓详细信息")

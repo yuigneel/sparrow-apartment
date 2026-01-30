@@ -2,14 +2,19 @@ package com.yulgnier.web.admin.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yulgnier.model.enmu.ItemType;
 import com.yulgnier.model.entity.*;
 import com.yulgnier.web.admin.mapper.ApartmentInfoMapper;
 import com.yulgnier.web.admin.service.*;
+import com.yulgnier.web.admin.vo.apartment.ApartmentItemVo;
+import com.yulgnier.web.admin.vo.apartment.ApartmentQueryVo;
 import com.yulgnier.web.admin.vo.apartment.ApartmentSubmitVo;
 import com.yulgnier.web.admin.vo.graph.GraphVo;
 import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,19 +35,31 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
     private final ApartmentFacilityService apartmentFacilityService;
     private final ApartmentLabelService apartmentLabelService;
     private final ApartmentFeeValueService apartmentFeeValueService;
+    private final ApartmentInfoMapper apartmentInfoMapper;
 
     @Autowired
-    public ApartmentInfoServiceImpl(GraphInfoService graphInfoService, ApartmentFacilityService apartmentFacilityService, ApartmentLabelService apartmentLabelService, ApartmentFeeValueService apartmentFeeValueService) {
+    public ApartmentInfoServiceImpl(GraphInfoService graphInfoService, ApartmentFacilityService apartmentFacilityService, ApartmentLabelService apartmentLabelService, ApartmentFeeValueService apartmentFeeValueService, ApartmentInfoMapper apartmentInfoMapper) {
         this.graphInfoService = graphInfoService;
         this.apartmentFacilityService = apartmentFacilityService;
         this.apartmentLabelService = apartmentLabelService;
         this.apartmentFeeValueService = apartmentFeeValueService;
+        this.apartmentInfoMapper = apartmentInfoMapper;
     }
 
     @Override
     public void saveOrUpdateApartment(ApartmentSubmitVo apartmentSubmitVo) {
+        // ========== 关键改动1：VO转Entity ==========
+        ApartmentInfo apartmentInfo = new ApartmentInfo();
+        // 把VO的属性拷贝到Entity（要求VO和Entity的属性名、类型一致）
+        BeanUtils.copyProperties(apartmentSubmitVo, apartmentInfo);
         boolean isUpdate = apartmentSubmitVo.getId() != null;
-        super.saveOrUpdate(apartmentSubmitVo);  //super. *调用的父类方法
+        // ========== 关键改动2：传入Entity对象 ==========
+        super.saveOrUpdate(apartmentInfo);  //super. *调用的父类方法
+        // ========== 关键改动3：新增场景下，把生成的ID回写到VO ==========
+        // 因为新增时ID是数据库自增/雪花算法生成的，VO里的ID原本是空的，必须回写
+        if (!isUpdate) {
+            apartmentSubmitVo.setId(apartmentInfo.getId());
+        }
         if (isUpdate) {
             //删除图片列表
             LambdaQueryWrapper<GraphInfo> apartmentInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -81,11 +98,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
         if (!CollectionUtils.isEmpty(facilityInfoIds)) {
             ArrayList<ApartmentFacility> apartmentFacilities = new ArrayList<>();
             for (Long facilityInfoId : facilityInfoIds) {
-                /*
                 ApartmentFacility apartmentFacility = new ApartmentFacility();
-                这里有@Builder注解，所以这里不能用new,当然可以用流式变成，但是这里yu·lgnier得动了，用最小修改
-                 */
-                ApartmentFacility apartmentFacility = ApartmentFacility.builder().build();
                 apartmentFacility.setApartmentId(apartmentSubmitVo.getId());
                 apartmentFacility.setFacilityId(facilityInfoId);
                 apartmentFacilities.add(apartmentFacility);
@@ -97,11 +110,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
         if (!CollectionUtils.isEmpty(labelIds)) {
             ArrayList<ApartmentLabel> apartmentLabels = new ArrayList<>();
             for (Long labelId : labelIds) {
-                /*
                 ApartmentLabel apartmentLabel = new ApartmentLabel();
-                这里有@Builder注解，所以这里不能用new
-                 */
-                ApartmentLabel apartmentLabel = ApartmentLabel.builder().build();
                 apartmentLabel.setApartmentId(apartmentSubmitVo.getId());
                 apartmentLabel.setLabelId(labelId);
                 apartmentLabels.add(apartmentLabel);
@@ -113,17 +122,19 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
         if (!CollectionUtils.isEmpty(feeValueIds)) {
             ArrayList<ApartmentFeeValue> apartmentFeeValues = new ArrayList<>();
             for (Long feeValueId : feeValueIds) {
-                /*
                 ApartmentFeeValue apartmentFeeValue = new ApartmentFeeValue();
-                这里有@Builder注解，所以这里不能用new
-                 */
-                ApartmentFeeValue apartmentFeeValue = ApartmentFeeValue.builder().build();
                 apartmentFeeValue.setApartmentId(apartmentSubmitVo.getId());
                 apartmentFeeValue.setFeeValueId(feeValueId);
                 apartmentFeeValues.add(apartmentFeeValue);
             }
             apartmentFeeValueService.saveBatch(apartmentFeeValues);
         }
+    }
+
+    @Override
+    public IPage<ApartmentItemVo> pageItem(Page<ApartmentItemVo> apartmentItemVoPage, ApartmentQueryVo queryVo) {
+        apartmentInfoMapper.pageItem(apartmentItemVoPage, queryVo);
+        return apartmentInfoMapper.pageItem(apartmentItemVoPage, queryVo);
     }
 }
 

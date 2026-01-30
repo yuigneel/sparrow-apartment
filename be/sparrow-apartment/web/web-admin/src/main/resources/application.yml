@@ -55,3 +55,12 @@ minio:
   secure: false
   # 可选配置：是否启用路径样式访问（旧版 MinIO 需开启，新版默认是虚拟主机模式，一般保持 false 即可）
   path-style-access: false
+
+
+
+# Swagger 配置（springdoc-openapi，对应 OpenAPI 3.0）
+springdoc:
+  # 开启复杂参数对象扁平化展示：将 DTO/VO 的字段直接展平为独立请求参数，不展示嵌套对象结构
+  # 适用场景：GET 查询参数、POST 表单参数（@RequestParam），让 Swagger 文档参数展示更简洁
+  # 注意：对于 @RequestBody 接收的 JSON 格式参数，建议保持默认 false（不扁平化），更符合 JSON 嵌套结构展示
+  default-flat-param-object: true
