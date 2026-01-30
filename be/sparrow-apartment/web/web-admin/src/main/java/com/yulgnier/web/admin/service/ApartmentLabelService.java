@@ -3,6 +3,9 @@ package com.yulgnier.web.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yulgnier.model.entity.ApartmentLabel;
+import com.yulgnier.model.entity.LabelInfo;
+
+import java.util.List;
 
 /**
 * @author liubo

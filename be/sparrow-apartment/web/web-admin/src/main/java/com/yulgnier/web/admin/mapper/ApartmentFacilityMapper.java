@@ -3,6 +3,9 @@ package com.yulgnier.web.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yulgnier.model.entity.ApartmentFacility;
+import com.yulgnier.model.entity.FacilityInfo;
+
+import java.util.List;
 
 /**
 * @author liubo
@@ -11,7 +14,6 @@ import com.yulgnier.model.entity.ApartmentFacility;
 * @Entity com.atguigu.lease.model.ApartmentFacility
 */
 public interface ApartmentFacilityMapper extends BaseMapper<ApartmentFacility> {
-
 }
 
 

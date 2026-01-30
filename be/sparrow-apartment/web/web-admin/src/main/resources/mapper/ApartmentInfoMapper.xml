@@ -20,8 +20,8 @@
         ai.longitude,
         ai.phone,
         ai.is_release,
-        tc.cnt as total_room_count_count,
-        tc.cnt - cc.cnt as free_room_count
+        ifnull(tc.cnt, 0) as total_room_count_count,
+        tc.cnt - ifnull(cc.cnt, 0) as free_room_count
         from (select id,
         name,
         introduction,

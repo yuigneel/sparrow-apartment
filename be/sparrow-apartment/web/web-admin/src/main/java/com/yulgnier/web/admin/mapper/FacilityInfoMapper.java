@@ -4,6 +4,8 @@ package com.yulgnier.web.admin.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yulgnier.model.entity.FacilityInfo;
 
+import java.util.List;
+
 /**
 * @author liubo
 * @description 针对表【facility_info(配套信息表)】的数据库操作Mapper
@@ -12,6 +14,7 @@ import com.yulgnier.model.entity.FacilityInfo;
 */
 public interface FacilityInfoMapper extends BaseMapper<FacilityInfo> {
 
+    List<FacilityInfo> selectListByApartment(Long id);
 }
 
 

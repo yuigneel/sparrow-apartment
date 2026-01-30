@@ -3,6 +3,9 @@ package com.yulgnier.web.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yulgnier.model.entity.FeeValue;
+import com.yulgnier.web.admin.vo.fee.FeeValueVo;
+
+import java.util.List;
 
 /**
 * @author liubo
@@ -12,6 +15,7 @@ import com.yulgnier.model.entity.FeeValue;
 */
 public interface FeeValueMapper extends BaseMapper<FeeValue> {
 
+    List<FeeValueVo> selectFeeValueVoList(Long id);
 }
 
 

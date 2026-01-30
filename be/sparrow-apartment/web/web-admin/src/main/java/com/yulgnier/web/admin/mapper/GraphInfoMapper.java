@@ -2,7 +2,11 @@ package com.yulgnier.web.admin.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yulgnier.model.enmu.ItemType;
 import com.yulgnier.model.entity.GraphInfo;
+import com.yulgnier.web.admin.vo.graph.GraphVo;
+
+import java.util.List;
 
 /**
 * @author liubo
@@ -12,6 +16,7 @@ import com.yulgnier.model.entity.GraphInfo;
 */
 public interface GraphInfoMapper extends BaseMapper<GraphInfo> {
 
+    List<GraphVo> selectGraphVoList(Long id, ItemType itemType);
 }
 
 
