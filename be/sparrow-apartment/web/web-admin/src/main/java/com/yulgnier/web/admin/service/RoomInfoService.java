@@ -1,8 +1,12 @@
 package com.yulgnier.web.admin.service;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yulgnier.model.entity.RoomInfo;
+import com.yulgnier.web.admin.vo.room.RoomItemVo;
+import com.yulgnier.web.admin.vo.room.RoomQueryVo;
+import com.yulgnier.web.admin.vo.room.RoomSubmitVo;
 
 /**
 * @author liubo
@@ -11,4 +15,7 @@ import com.yulgnier.model.entity.RoomInfo;
 */
 public interface RoomInfoService extends IService<RoomInfo> {
 
+    void saveOrUpdateRoom(RoomSubmitVo roomSubmitVo);
+
+    IPage<RoomItemVo> pageItem(IPage<RoomItemVo> roomItemVoPage, RoomQueryVo queryVo);
 }

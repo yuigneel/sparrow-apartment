@@ -3,5 +3,94 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yulgnier.web.admin.mapper.RoomInfoMapper">
+    <!-- 顶层 resultMap：映射 RoomItemVo（包含嵌套的 ApartmentInfo） -->
+    <resultMap id="RoomItemResultMap" type="com.yulgnier.web.admin.vo.room.RoomItemVo">
+        <!-- 1. 映射 RoomItemVo 继承自 RoomInfo 的字段（MyBatis 自动匹配，也可手动指定） -->
+        <id column="id" property="id"/> <!-- 主键字段，必须指定，提升映射效率 -->
+        <result column="room_number" property="roomNumber"/>
+        <result column="rent" property="rent"/>
+        <result column="apartment_id" property="apartmentId"/>
+        <result column="is_release" property="isRelease"/>
 
+        <!-- 2. 映射 RoomItemVo 自身的扁平字段（租约结束日期、入住状态） -->
+        <result column="lease_end_date" property="leaseEndDate"/> <!-- 对应 SQL 中 IFNULL 处理后的字段 -->
+        <result column="is_check_in" property="isCheckIn"/> <!-- 对应 SQL 中 IF 函数处理后的字段 -->
+
+        <!-- 3. 核心：嵌套映射 ApartmentInfo 类型的 apartmentInfo 属性（用 <association> 标签） -->
+        <association property="apartmentInfo" javaType="com.yulgnier.model.entity.ApartmentInfo">
+            <id column="ap_id" property="id"/> <!-- 公寓主键，对应 SQL 中的 ap_id -->
+            <result column="ap_name" property="name"/> <!-- 公寓名称，对应 SQL 中的 ap_name -->
+            <result column="ap_introduction" property="introduction"/> <!-- 公寓介绍 -->
+            <result column="ap_district_id" property="districtId"/> <!-- 区域ID -->
+            <result column="ap_district_name" property="districtName"/> <!-- 区域名称 -->
+            <result column="ap_city_id" property="cityId"/> <!-- 城市ID -->
+            <result column="ap_city_name" property="cityName"/> <!-- 城市名称 -->
+            <result column="ap_province_id" property="provinceId"/> <!-- 省份ID -->
+            <result column="ap_province_name" property="provinceName"/> <!-- 省份名称 -->
+            <result column="ap_address_detail" property="addressDetail"/> <!-- 详细地址 -->
+            <result column="ap_latitude" property="latitude"/> <!-- 经度 -->
+            <result column="ap_longitude" property="longitude"/> <!-- 纬度 -->
+            <result column="ap_phone" property="phone"/> <!-- 公寓电话 -->
+            <result column="ap_is_release" property="isRelease"/> <!-- 是否发布（枚举类型） -->
+        </association>
+    </resultMap>
+<!--  好吧，伊格尼尔臣服了，还是一起写吧！！！  -->
+    <select id="pageItem" resultType="com.yulgnier.web.admin.vo.room.RoomItemVo">
+        select
+        -- 房间表字段（无需加前缀，直接映射 RoomItemVo 继承的 RoomInfo 属性）
+        r.id, r.room_number, r.rent, r.apartment_id, r.is_release,
+        -- 公寓表字段：加 ap_ 前缀别名，避免冲突，方便嵌套映射
+        a.id AS ap_id,
+        a.name AS ap_name,
+        a.introduction AS ap_introduction,
+        a.district_id AS ap_district_id,
+        a.district_name AS ap_district_name,
+        a.city_id AS ap_city_id,
+        a.city_name AS ap_city_name,
+        a.province_id AS ap_province_id,
+        a.province_name AS ap_province_name,
+        a.address_detail AS ap_address_detail,
+        a.latitude AS ap_latitude,
+        a.longitude AS ap_longitude,
+        a.phone AS ap_phone,
+        a.is_release AS ap_is_release,
+        -- 租约表字段：清理重复，只保留处理后的 lease_end_date
+        l.lease_end_date, -- 保留原字段（可选，实际用下面处理后的）
+        IFNULL(l.lease_end_date, CURDATE()) AS lease_end_date, -- 租约结束日期（映射 RoomItemVo.leaseEndDate）
+        IF(l.status IN (2, 5), TRUE, FALSE) AS is_check_in -- 入住状态（映射 RoomItemVo.isCheckIn）
+        from room_info as r
+        left join apartment_info as a on r.apartment_id = a.id and a.is_deleted = 0
+        left join lease_agreement as l on r.id = l.room_id and l.is_deleted = 0
+        <where>
+            r.is_deleted = 0
+            <if test="queryVo.provinceId != null">
+                and a.province_id = #{queryVo.provinceId}
+            </if>
+            <if test="queryVo.cityId != null">
+                and a.city_id = #{queryVo.cityId}
+            </if>
+            <if test="queryVo.districtId != null">
+                and a.district_id = #{queryVo.districtId}
+            </if>
+            <if test="queryVo.apartmentId != null">
+                and r.apartment_id = #{queryVo.apartmentId}
+            </if>
+        </where>
+    </select>
 </mapper>
+<!--        # select-->
+<!--        # &#45;&#45; 核心：用 CASE 分分支计算不同单位的结束日期 羽服了，这个数据库设计的有问题！！！-->
+<!--        # &#45;&#45; 好吧，是我对这个项目不太了解，老师NB-->
+<!--        # CASE t.unit-->
+<!--        # WHEN '年' THEN DATE_ADD(t.create_time, INTERVAL t.month_count YEAR)-->
+<!--        # WHEN '月' THEN DATE_ADD(t.create_time, INTERVAL t.month_count MONTH)-->
+<!--        # WHEN '日' THEN DATE_ADD(t.create_time, INTERVAL t.month_count DAY)-->
+<!--        # WHEN '周' THEN DATE_ADD(t.create_time, INTERVAL t.month_count WEEK)-->
+<!--        # WHEN '时' THEN DATE_ADD(t.create_time, INTERVAL t.month_count HOUR)-->
+<!--        # WHEN '分' THEN DATE_ADD(t.create_time, INTERVAL t.month_count MINUTE)-->
+<!--        # WHEN '秒' THEN DATE_ADD(t.create_time, INTERVAL t.month_count SECOND)-->
+<!--        # ELSE DATE_ADD(t.create_time, INTERVAL t.month_count DAY) &#45;&#45; 兜底逻辑-->
+<!--        # END AS lease_end_date &#45;&#45; 计算结果别名，用于映射 Java Date 属性-->
+<!--        # from room_lease_term as r-->
+<!--        # left join lease_term as t on r.lease_term_id = t.id and t.is_deleted=0-->
+<!--        # where r.is_deleted=0-->

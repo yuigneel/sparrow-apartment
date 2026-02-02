@@ -2,15 +2,18 @@ package com.yulgnier.web.admin.controller.apartment;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yulgnier.common.result.Result;
 import com.yulgnier.model.enmu.ReleaseStatus;
 import com.yulgnier.model.entity.RoomInfo;
+import com.yulgnier.web.admin.service.RoomInfoService;
 import com.yulgnier.web.admin.vo.room.RoomDetailVo;
 import com.yulgnier.web.admin.vo.room.RoomItemVo;
 import com.yulgnier.web.admin.vo.room.RoomQueryVo;
 import com.yulgnier.web.admin.vo.room.RoomSubmitVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,16 +23,25 @@ import java.util.List;
 @RequestMapping("/admin/room")
 public class RoomController {
 
+    private final RoomInfoService roomInfoService;
+
+    public RoomController(RoomInfoService roomInfoService) {
+        this.roomInfoService = roomInfoService;
+    }
+
     @Operation(summary = "保存或更新房间信息")
     @PostMapping("saveOrUpdate")
     public Result saveOrUpdate(@RequestBody RoomSubmitVo roomSubmitVo) {
+        roomInfoService.saveOrUpdateRoom(roomSubmitVo);
         return Result.ok();
     }
 
     @Operation(summary = "根据条件分页查询房间列表")
     @GetMapping("pageItem")
     public Result<IPage<RoomItemVo>> pageItem(@RequestParam long current, @RequestParam long size, RoomQueryVo queryVo) {
-        return Result.ok();
+        IPage<RoomItemVo> roomItemVoPage = new Page<>(current, size);
+        IPage<RoomItemVo> result = roomInfoService.pageItem(roomItemVoPage, queryVo);
+        return Result.ok(result);
     }
 
     @Operation(summary = "根据id获取房间详细信息")
