@@ -3,6 +3,7 @@ package com.yulgnier.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yulgnier.model.enmu.AppointmentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -29,13 +30,13 @@ public class ViewAppointment extends BaseEntity {
     @TableField(value = "phone")
     private String phone;
 
-    @Schema(description = "公寓id")
+    @Schema(description = "公寓 id")
     @TableField(value = "apartment_id")
     private Long apartmentId;
 
     @Schema(description = "预约时间")
     @TableField(value = "appointment_time")
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private java.util.Date appointmentTime;
 
     @Schema(description = "备注信息")

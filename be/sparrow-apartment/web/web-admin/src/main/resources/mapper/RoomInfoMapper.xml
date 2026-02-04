@@ -77,7 +77,94 @@
             </if>
         </where>
     </select>
+
+
+    <select id="selectAttrValueListById" resultType="com.yulgnier.web.admin.vo.attr.AttrValueVo">
+        select v.id,
+               v.name,
+               v.attr_key_id,
+               k.name as attrKeyName
+        from room_attr_value as r
+                 left join attr_value as v on r.attr_value_id = v.id and v.is_deleted = 0
+                 left join attr_key as k on v.attr_key_id = k.id and k.is_deleted = 0
+        where r.is_deleted = 0
+          and r.room_id = #{id}
+    </select>
+
+
+    <select id="selectFacilityInfoListById" resultType="com.yulgnier.model.entity.FacilityInfo">
+        select
+            f.id,
+            f.type,
+            f.name,
+            f.icon
+        from room_facility as r
+                 left join facility_info as f on r.facility_id = f.id and f.is_deleted = 0
+        where r.is_deleted = 0
+          and r.room_id = #{id}
+    </select>
+
+
+    <select id="selectLabelInfoListById" resultType="com.yulgnier.model.entity.LabelInfo">
+        select l.id,
+               l.type,
+               l.name
+        from room_label as r
+                 left join label_info as l on r.label_id = l.id and l.is_deleted = 0
+        where r.is_deleted = 0
+          and r.room_id = #{id}
+    </select>
+
+
+    <select id="selectPaymentTypeListById" resultType="com.yulgnier.model.entity.PaymentType">
+        select pt.id,
+               pt.name,
+               pt.pay_month_count,
+               pt.additional_info
+        from room_payment_type as r
+                 left join payment_type as pt on r.payment_type_id = pt.id and pt.is_deleted = 0
+        where r.is_deleted = 0
+          and r.room_id = #{id}
+    </select>
+
+    <select id="selectLeaseTermListById" resultType="com.yulgnier.model.entity.LeaseTerm">
+        select lt.id,
+               lt.month_count,
+               lt.unit
+        from lease_agreement as la
+                 left join lease_term as lt on la.lease_term_id = lt.id and lt.is_deleted = 0
+        where la.is_deleted = 0
+          and la.room_id = #{id}
+    </select>
+
+
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!--        # select-->
 <!--        # &#45;&#45; 核心：用 CASE 分分支计算不同单位的结束日期 羽服了，这个数据库设计的有问题！！！-->
 <!--        # &#45;&#45; 好吧，是我对这个项目不太了解，老师NB-->

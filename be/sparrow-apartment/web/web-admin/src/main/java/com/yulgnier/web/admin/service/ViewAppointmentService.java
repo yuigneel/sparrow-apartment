@@ -1,8 +1,12 @@
 package com.yulgnier.web.admin.service;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yulgnier.model.entity.ViewAppointment;
+import com.yulgnier.web.admin.vo.appointment.AppointmentQueryVo;
+import com.yulgnier.web.admin.vo.appointment.AppointmentVo;
 
 /**
 * @author liubo
@@ -11,4 +15,5 @@ import com.yulgnier.model.entity.ViewAppointment;
 */
 public interface ViewAppointmentService extends IService<ViewAppointment> {
 
+    IPage<AppointmentVo> pageAppointmentVo(Page<AppointmentVo> page, AppointmentQueryVo queryVo);
 }

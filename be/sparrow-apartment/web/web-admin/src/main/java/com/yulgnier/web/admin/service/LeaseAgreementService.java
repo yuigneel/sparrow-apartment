@@ -1,8 +1,12 @@
 package com.yulgnier.web.admin.service;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yulgnier.model.entity.LeaseAgreement;
+import com.yulgnier.web.admin.vo.agreement.AgreementQueryVo;
+import com.yulgnier.web.admin.vo.agreement.AgreementVo;
 
 /**
 * @author liubo
@@ -11,4 +15,7 @@ import com.yulgnier.model.entity.LeaseAgreement;
 */
 public interface LeaseAgreementService extends IService<LeaseAgreement> {
 
+    AgreementVo getAgreementVoById(Long id);
+
+    IPage<AgreementVo> pageAgreementVo(Page<AgreementVo> agreementVoPage, AgreementQueryVo queryVo);
 }

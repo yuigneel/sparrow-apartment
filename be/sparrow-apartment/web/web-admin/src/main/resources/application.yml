@@ -24,6 +24,12 @@ spring:
       max-file-size: 50MB
       # 单次请求（可以多文件上传）的总大小上限（建议比单个文件大，比如100MB）
       max-request-size: 100MB
+  # Jackson 时间格式
+  Jackson:
+    # 时区
+    time-zone:  GMT+8
+
+
 # 用于打印框架生成的sql语句，便于调试
 mybatis-plus:
   configuration:

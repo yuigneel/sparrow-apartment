@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 麻雀租赁项目启动类
@@ -17,6 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication(scanBasePackages = {"com.yulgnier.web.admin", "com.yulgnier.common.minio",
         "com.yulgnier.common.exception", "com.yulgnier.common.mybatisplus"})
 @MapperScan("com.yulgnier.web.admin.mapper")
+@EnableScheduling // 开启定时任务
 public class AdminWebApplication {
     // 项目入口main方法：启动Spring Boot应用
     public static void main(String[] args) {
