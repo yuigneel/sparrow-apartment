@@ -2,6 +2,7 @@ package com.yulgnier.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yulgnier.model.enmu.BaseStatus;
 import com.yulgnier.model.enmu.SystemUserType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,7 @@ public class SystemUser extends BaseEntity {
     private String username;
 
     @Schema(description = "密码")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @TableField(value = "password")
     private String password;
 

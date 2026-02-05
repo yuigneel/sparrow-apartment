@@ -2,7 +2,11 @@ package com.yulgnier.web.admin.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yulgnier.model.entity.SystemUser;
+import com.yulgnier.web.admin.vo.system.user.SystemUserItemVo;
+import com.yulgnier.web.admin.vo.system.user.SystemUserQueryVo;
 
 /**
 * @author liubo
@@ -12,6 +16,7 @@ import com.yulgnier.model.entity.SystemUser;
 */
 public interface SystemUserMapper extends BaseMapper<SystemUser> {
 
+    IPage<SystemUserItemVo> pageSystemUserItemVo(Page<SystemUserItemVo> systemUserItemVoPage, SystemUserQueryVo queryVo);
 }
 
 

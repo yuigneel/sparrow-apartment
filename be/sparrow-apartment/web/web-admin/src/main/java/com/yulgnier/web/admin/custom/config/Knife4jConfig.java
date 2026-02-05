@@ -1,6 +1,7 @@
 package com.yulgnier.web.admin.custom.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ public class Knife4jConfig {
                 .info(new Info()
                         .title("后台管理系统API")
                         .version("0.0.0-snapshot")
+                        .contact(new Contact().name("yulgnier").url("https://github.com/yulgnier").email("yulgnier@gmail.com"))
                         .description("后台管理系统API"));
     }
 
