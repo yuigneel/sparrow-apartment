@@ -51,6 +51,45 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- 阿帕奇通用编解码工具包 -->
+        <!-- 用途：用户密码MD5加密、接口参数Base64编解码、数据哈希校验等 -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <!-- 验证码 -->
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Redis 官方 Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- JJWT 核心API包，提供JWT创建、解析、验证的核心接口 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
+
+        <!-- JJWT 核心实现包，仅运行时需要，包含API的具体实现逻辑 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- JJWT 的Jackson JSON序列化支持包，运行时需要，用于处理JWT的JSON格式数据 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
 

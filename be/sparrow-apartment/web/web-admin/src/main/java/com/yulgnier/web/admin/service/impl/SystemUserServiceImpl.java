@@ -1,12 +1,16 @@
 package com.yulgnier.web.admin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yulgnier.common.login.LoginUser;
+import com.yulgnier.common.login.LoginUserHolder;
 import com.yulgnier.model.entity.SystemUser;
 import com.yulgnier.web.admin.mapper.SystemPostMapper;
 import com.yulgnier.web.admin.mapper.SystemUserMapper;
 import com.yulgnier.web.admin.service.SystemUserService;
+import com.yulgnier.web.admin.vo.system.user.SystemUserInfoVo;
 import com.yulgnier.web.admin.vo.system.user.SystemUserItemVo;
 import com.yulgnier.web.admin.vo.system.user.SystemUserQueryVo;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +47,18 @@ public class SystemUserServiceImpl extends ServiceImpl<SystemUserMapper, SystemU
         BeanUtils.copyProperties(systemUser, systemUserItemVo);
         systemUserItemVo.setPostName(systemPostMapper.selectById(systemUser.getPostId()).getName());
         return systemUserItemVo;
+    }
+
+    @Override
+    public SystemUserInfoVo getSystemUserInfoVoById() {
+        LoginUser loginUser = LoginUserHolder.getLoginUser();
+        LambdaQueryWrapper<SystemUser> systemUserLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        systemUserLambdaQueryWrapper.eq(SystemUser::getId, loginUser.getUserId());
+        SystemUser systemUser = systemUserMapper.selectOne(systemUserLambdaQueryWrapper);
+        SystemUserInfoVo systemUserInfoVo = new SystemUserInfoVo();
+        systemUserInfoVo.setName(systemUser.getName());
+        systemUserInfoVo.setAvatarUrl(systemUser.getAvatarUrl());
+        return systemUserInfoVo;
     }
 }
 

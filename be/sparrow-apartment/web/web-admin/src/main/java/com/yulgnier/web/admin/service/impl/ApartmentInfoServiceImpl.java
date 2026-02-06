@@ -182,7 +182,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
         if (count > 0) {
             //抛出异常
-            throw new LeaseException(ResultCodeEnum.DATA_ERROR, "该公寓有房间，不能删除！");
+            throw new LeaseException(ResultCodeEnum.DATA_ERROR);
         }
 
 

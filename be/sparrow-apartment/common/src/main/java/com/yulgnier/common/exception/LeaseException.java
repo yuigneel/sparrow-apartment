@@ -28,8 +28,8 @@ public class LeaseException extends RuntimeException {
         this.code = code;
     }
 
-    public LeaseException(ResultCodeEnum resultCodeEnum, String message) {
-        super(message);
+    public LeaseException(ResultCodeEnum resultCodeEnum) {
+        super(resultCodeEnum.getMessage());
         this.code = resultCodeEnum.getCode();
     }
 }
