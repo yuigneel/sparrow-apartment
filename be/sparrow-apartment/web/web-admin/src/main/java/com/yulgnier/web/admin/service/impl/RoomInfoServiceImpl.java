@@ -2,6 +2,7 @@ package com.yulgnier.web.admin.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yulgnier.model.enmu.ItemType;
@@ -69,13 +70,15 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
 
 
     @Override
+    @Transactional
     public void saveOrUpdateRoom(RoomSubmitVo roomSubmitVo) {
+        // ========== 关键改动1：VO转Entity ==========
         RoomInfo roomInfo = new RoomInfo();
+        // 把VO的属性拷贝到Entity（要求VO和Entity的属性名、类型一致）
         BeanUtils.copyProperties(roomSubmitVo, roomInfo);
-        //1.判断id是否为null
-        Long id = roomSubmitVo.getId();
-        //2.如果不为空，则进行删除操作
-        if (id != null) {
+        boolean isUpdate = roomSubmitVo.getId() != null;
+        //2.如果是更新操作，则进行删除关联数据操作
+        if (isUpdate) {
             //2.1删除租赁关系
             LambdaQueryWrapper<RoomLeaseTerm> roomLeaseTermLambdaQueryWrapper = new LambdaQueryWrapper<>();
             roomLeaseTermLambdaQueryWrapper.in(RoomLeaseTerm::getLeaseTermId, roomSubmitVo.getLeaseTermIds());
@@ -103,8 +106,8 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
             graphInfoMapper.delete(graphInfoLambdaQueryWrapper);
         }
         //3.进行保存操作
-        //3.1插入房间信息
-        roomInfoMapper.insert(roomInfo);
+        //3.1插入或更新房间信息
+        this.saveOrUpdate(roomInfo);
         //3.2插入租赁关系
         List<Long> leaseTermIds = roomSubmitVo.getLeaseTermIds();
         if (!CollectionUtils.isEmpty(leaseTermIds)) {
