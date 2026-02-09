@@ -4,4 +4,110 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yulgnier.web.app.mapper.LeaseAgreementMapper">
 
+    <resultMap id="listItemByPhoneMap" type="com.yulgnier.web.app.vo.agreement.AgreementItemVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="roomGraphVoList" ofType="com.yulgnier.web.app.vo.graph.GraphVo" column="room_id"
+                    select="selectRoomGraphsByRoomId"/>
+    </resultMap>
+
+    <resultMap id="getDetailByIdMap" type="com.yulgnier.web.app.vo.agreement.AgreementDetailVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <result property="apartmentId" column="apartment_id"/>
+        <result property="roomId" column="room_id"/>
+        <association property="leaseTermMonthCount" javaType="java.lang.Integer" column="room_id" select="selectLeaseTermMonthCountByRoomId"/>
+        <association property="leaseTermUnit" javaType="java.lang.String" column="room_id" select="selectLeaseTermUnitByRoomId"/>
+        <association property="paymentTypeName" javaType="java.lang.String" column="room_id" select="selectPaymentTypeNameByRoomId"/>
+        <!-- 这里可以引用其它mapper.xml文件的语句，但是这个架构毕竟我不熟悉，也没有文档，所以还是再写一遍屎吧 -->
+        <collection property="apartmentGraphVoList" column="apartment_id" ofType="com.yulgnier.web.app.vo.graph.GraphVo"
+                    select="selectApartmentGraphsByApartmentId"/>
+        <collection property="roomGraphVoList" column="room_id" ofType="com.yulgnier.web.app.vo.graph.GraphVo"
+                    select="selectRoomGraphsByRoomId"/>
+    </resultMap>
+
+    <select id="listItemByPhone" resultMap="listItemByPhoneMap">
+        select la.id,
+               ai.name   as "apartmentName",
+               ri.room_number,
+               la.status as "leaseStatus",
+               la.lease_start_date,
+               la.lease_end_date,
+               la.source_type,
+               la.rent,
+               ri.id     as room_id
+        from lease_agreement as la
+                 left join room_info as ri on la.room_id = ri.id and ri.is_deleted = 0
+                 left join apartment_info as ai on ri.apartment_id = ai.id and ai.is_deleted = 0
+        where la.phone = #{username}
+          and la.is_deleted = 0
+    </select>
+
+    <select id="selectRoomGraphsByRoomId" resultType="com.yulgnier.web.app.vo.graph.GraphVo">
+        select name, url
+        from graph_info
+        where item_type = 2
+          and item_id = #{roomId}
+          and is_deleted = 0
+    </select>
+
+    <select id="getDetailById" resultMap="getDetailByIdMap">
+        select lg.id,
+               lg.phone,
+               lg.name,
+               lg.identification_number,
+               lg.apartment_id,
+               lg.room_id,
+               lg.lease_start_date,
+               lg.lease_end_date,
+               lg.lease_term_id,
+               lg.rent,
+               lg.deposit,
+               lg.payment_type_id,
+               lg.status,
+               lg.source_type,
+               lg.additional_info,
+               ai.name as "apartmentName",
+               ri.room_number
+        from lease_agreement as lg
+                 left join room_info as ri on lg.room_id = ri.id and ri.is_deleted = 0
+                 left join apartment_info as ai on lg.apartment_id = ai.id and ai.is_deleted = 0
+        where lg.id = #{id}
+          and lg.is_deleted = 0
+        limit 1
+    </select>
+
+    <select id="selectApartmentGraphsByApartmentId" resultType="com.yulgnier.web.app.vo.graph.GraphVo">
+        select name, url
+        from graph_info
+        where item_type = 1
+          and item_id = #{apartmentId}
+          and is_deleted = 0
+    </select>
+
+    <select id="selectPaymentTypeNameByRoomId" resultType="java.lang.String">
+        select pt.name as "paymentTypeName"
+        from room_payment_type as rpt
+                 join payment_type as pt on rpt.payment_type_id = pt.id and pt.is_deleted = 0
+        where rpt.room_id = #{roomId}
+          and rpt.is_deleted = 0
+        limit 1
+    </select>
+    
+    <select id="selectLeaseTermMonthCountByRoomId" resultType="java.lang.Integer">
+        select lt.month_count
+        from room_lease_term as rlt
+                 join lease_term as lt on rlt.lease_term_id = lt.id and lt.is_deleted = 0
+        where rlt.room_id = #{roomId}
+          and rlt.is_deleted = 0
+        limit 1
+    </select>
+
+    <select id="selectLeaseTermUnitByRoomId" resultType="java.lang.String">
+        select lt.unit
+        from room_lease_term as rlt
+                 join lease_term as lt on rlt.lease_term_id = lt.id and lt.is_deleted = 0
+        where rlt.room_id = #{roomId}
+          and rlt.is_deleted = 0
+        limit 1
+    </select>
+
 </mapper>

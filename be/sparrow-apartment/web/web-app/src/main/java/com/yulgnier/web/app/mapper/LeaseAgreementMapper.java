@@ -3,6 +3,10 @@ package com.yulgnier.web.app.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yulgnier.model.entity.LeaseAgreement;
+import com.yulgnier.web.app.vo.agreement.AgreementDetailVo;
+import com.yulgnier.web.app.vo.agreement.AgreementItemVo;
+
+import java.util.List;
 
 /**
 * @author liubo
@@ -12,6 +16,9 @@ import com.yulgnier.model.entity.LeaseAgreement;
 */
 public interface LeaseAgreementMapper extends BaseMapper<LeaseAgreement> {
 
+    List<AgreementItemVo> listItemByPhone(String username);
+
+    AgreementDetailVo getDetailById(Long id);
 }
 
 

@@ -58,7 +58,8 @@ public class LoginServiceImpl implements LoginService {
             throw new LeaseException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);
         }
         LambdaQueryWrapper<SystemUser> systemUserLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        systemUserLambdaQueryWrapper.eq(SystemUser::getUsername, loginVo.getUsername());
+        systemUserLambdaQueryWrapper.eq(SystemUser::getUsername, loginVo.getUsername())
+                                   .eq(SystemUser::getStatus, BaseStatus.ENABLE);
         SystemUser systemUser = systemUserMapper.selectOne(systemUserLambdaQueryWrapper);
 
         if (systemUser == null){

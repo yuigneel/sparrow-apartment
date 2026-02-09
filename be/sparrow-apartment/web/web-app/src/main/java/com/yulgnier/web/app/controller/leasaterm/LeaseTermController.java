@@ -2,6 +2,7 @@ package com.yulgnier.web.app.controller.leasaterm;
 
 import com.yulgnier.common.result.Result;
 import com.yulgnier.model.entity.LeaseTerm;
+import com.yulgnier.web.app.service.LeaseTermService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +17,16 @@ import java.util.List;
 @Tag(name = "租期信息")
 public class LeaseTermController {
 
+private final LeaseTermService leaseTermService;
+
+    public LeaseTermController(LeaseTermService leaseTermService) {
+        this.leaseTermService = leaseTermService;
+    }
+
     @GetMapping("listByRoomId")
     @Operation(summary = "根据房间id获取可选获取租期列表")
     public Result<List<LeaseTerm>> list(@RequestParam Long id) {
-        return Result.ok();
+        List<LeaseTerm> result=leaseTermService.listLeaseTermByRoomId(id);
+        return Result.ok(result);
     }
 }
