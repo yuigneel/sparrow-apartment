@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(scanBasePackages = {"com.yulgnier.web.app",
-        "com.yulgnier.common.exception", "com.yulgnier.common.mybatisplus"})
+        "com.yulgnier.common.exception", "com.yulgnier.common.mybatisplus","com.yulgnier.common.redis"})
 @MapperScan("com.yulgnier.web.app.mapper")
 @EnableAsync // 开启异步任务
 public class AppWebApplication {

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yulgnier.common.constant.RedisConstant;
 import com.yulgnier.model.enmu.ItemType;
 import com.yulgnier.model.enmu.ReleaseStatus;
 import com.yulgnier.model.entity.*;
@@ -18,6 +19,7 @@ import com.yulgnier.web.admin.vo.room.RoomQueryVo;
 import com.yulgnier.web.admin.vo.room.RoomSubmitVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -48,10 +50,10 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
     private final GraphInfoMapper graphInfoMapper;
     private final RoomInfoMapper roomInfoMapper;
     private final ApartmentInfoMapper apartmentInfoMapper;
-
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    public RoomInfoServiceImpl(RoomLeaseTermMapper roomLeaseTermMapper, RoomLeaseTermService roomLeaseTermService, RoomPaymentTypeService roomPaymentTypeService, RoomPaymentTypeMapper roomPaymentTypeMapper, RoomAttrValueService roomAttrValueService, RoomAttrValueMapper roomAttrValueMapper, RoomLabelService roomLabelService, RoomLabelMapper roomLabelMapper, RoomFacilityService roomFacilityService, RoomFacilityMapper roomFacilityMapper, GraphInfoService graphInfoService, GraphInfoMapper graphInfoMapper, RoomInfoMapper roomInfoMapper, ApartmentInfoMapper apartmentInfoMapper) {
+    public RoomInfoServiceImpl(RoomLeaseTermMapper roomLeaseTermMapper, RoomLeaseTermService roomLeaseTermService, RoomPaymentTypeService roomPaymentTypeService, RoomPaymentTypeMapper roomPaymentTypeMapper, RoomAttrValueService roomAttrValueService, RoomAttrValueMapper roomAttrValueMapper, RoomLabelService roomLabelService, RoomLabelMapper roomLabelMapper, RoomFacilityService roomFacilityService, RoomFacilityMapper roomFacilityMapper, GraphInfoService graphInfoService, GraphInfoMapper graphInfoMapper, RoomInfoMapper roomInfoMapper, ApartmentInfoMapper apartmentInfoMapper, RedisTemplate<String, Object> redisTemplate) {
         this.roomLeaseTermMapper = roomLeaseTermMapper;
         this.roomLeaseTermService = roomLeaseTermService;
         this.roomPaymentTypeService = roomPaymentTypeService;
@@ -66,6 +68,7 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
         this.graphInfoMapper = graphInfoMapper;
         this.roomInfoMapper = roomInfoMapper;
         this.apartmentInfoMapper = apartmentInfoMapper;
+        this.redisTemplate = redisTemplate;
     }
 
 
@@ -104,6 +107,9 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
             graphInfoLambdaQueryWrapper.eq(GraphInfo::getItemType, ItemType.ROOM);
             graphInfoLambdaQueryWrapper.eq(GraphInfo::getItemId, roomSubmitVo.getId());
             graphInfoMapper.delete(graphInfoLambdaQueryWrapper);
+            //3. 删除缓存
+            String key = RedisConstant.APP_ROOM_PREFIX + roomInfo.getId();
+            redisTemplate.delete(key);
         }
         //3.进行保存操作
         //3.1插入或更新房间信息
@@ -251,6 +257,8 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
         roomPaymentTypeService.remove(new LambdaQueryWrapper<RoomPaymentType>().eq(RoomPaymentType::getRoomId, id));
         //6.删除房间基本信息表
         this.removeById(id);
+        //7.删除缓存
+        redisTemplate.delete(RedisConstant.APP_ROOM_PREFIX+ id);
     }
 
     @Override
