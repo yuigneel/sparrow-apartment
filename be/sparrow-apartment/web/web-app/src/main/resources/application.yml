@@ -1,34 +1,68 @@
+# 服务配置
 server:
-  port: 8080
+  # 服务启动端口，设置为8081
+  port: 8081
 
+# Spring 核心配置
 spring:
-  # 启用哪一个环境配置, dev为开发环境 test为测试环境  prod为生产环境   uat为用户验收环境
+  # 激活的环境配置，这里使用开发环境(dev)
   profiles:
-    active:  dev
+    active: dev
+
+  # 数据源配置（MyBatis-Plus 依赖的数据库连接池）
   datasource:
+    # 使用 HikariCP 作为数据源实现，这是 SpringBoot 默认的高性能连接池
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:8080/sparrow_rental?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    # JDBC 连接 URL，需替换占位符为实际数据库信息
+    # <hostname>: 数据库服务器地址，如 localhost 或 192.168.x.x
+    # <port>: 数据库端口，MySQL 默认 3306
+    # <database>: 要连接的数据库名称
+    # 其他参数：启用Unicode、UTF-8编码、关闭SSL、允许公钥检索、设置时区为GMT+8
+    url: jdbc:mysql://localhost:3306/sparrow_rental?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2b8
+    # 数据库用户名，替换为实际账号
     username: ${sparrow.datasource.username}
+    # 数据库密码，替换为实际密码
     password: ${sparrow.datasource.password}
+
+    # HikariCP 连接池的详细配置
     hikari:
-      connection-test-query: SELECT 1 # 自动检测连接
-      connection-timeout: 60000 # 数据库连接超时时间,默认30秒
-      idle-timeout: 500000 #空闲连接存活最大时间，默认600000（10分钟）
-      max-lifetime: 540000 #此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
-      maximum-pool-size: 12 #连接池最大连接数，默认是10
-      minimum-idle: 10 #最小空闲连接数量
-      pool-name: SPHHikariPool # 连接池名称
-# 用于打印框架生成的sql语句，便于调试
+      # 连接测试语句，用于验证连接有效性
+      connection-test-query: SELECT 1
+      # 连接超时时间（毫秒），超过该时间未获取到连接则抛出异常，这里设置为60秒
+      connection-timeout: 60000
+      # 空闲连接的最大存活时间（毫秒），超过则被释放，这里设置为500秒
+      idle-timeout: 500000
+      # 连接池中连接的最大生命周期（毫秒），超过则被回收，这里设置为540秒
+      max-lifetime: 540000
+      # 连接池最大连接数，这里设置为12
+      maximum-pool-size: 12
+      # 连接池最小空闲连接数，这里设置为10
+      minimum-idle: 10
+      # 连接池名称，用于区分不同的连接池实例
+      pool-name: SPHHikariPool
+
+  # Jackson JSON 序列化配置
+  jackson:
+    # 设置 Jackson 的时区为 GMT+8，确保日期时间序列化时使用正确时区
+    time-zone: GMT+8
+  data:
+    redis:
+      database: 0
+      host: ${sparrow.redis.host}
+      port: ${sparrow.redis.port}
+
+# MyBatis-Plus 框架配置
 mybatis-plus:
   configuration:
+    # 日志实现类，使用标准输出打印SQL语句，方便开发调试
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-# 禁用Spring Boot Admin MBean以避免冲突
-management:
-  endpoints:
-    jmx:
-      exposure:
-        include: ""
-  endpoint:
-    shutdown:
-      enabled: false
+
+# Swagger 配置
+springdoc:
+  # 默认展开参数对象
+  default-flat-param-object: true
+# 注意：
+# 1. 请根据实际环境修改 <hostname>, <port>, <database>, <username>, <password> 等占位符。
+# 2. 连接池参数（如 maximum-pool-size）可根据服务器性能和并发需求进行调整。
+# 3. mybatis-plus 的 log-impl 仅建议在开发环境使用，生产环境应关闭以避免日志过多。

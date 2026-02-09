@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yulgnier.web.app.mapper.LabelInfoMapper">
+
+    <select id="selectLabelInfoByRoomId" resultType="com.yulgnier.model.entity.LabelInfo">
+        select li.id,
+               li.type,
+               li.name
+        from room_label as rl
+                 left join label_info as li on rl.label_id = li.id and li.is_deleted = 0
+        where rl.room_id = #{id}
+          and rl.is_deleted = 0
+    </select>
+    <select id="selectLabelInfoByApartmentId" resultType="com.yulgnier.model.entity.LabelInfo">
+        select li.id, li.type, li.name
+        from apartment_label as al
+                 left join label_info as li on al.label_id = li.id and li.is_deleted = 0
+        where al.apartment_id = #{id}
+          and al.is_deleted = 0
+    </select>
+</mapper>

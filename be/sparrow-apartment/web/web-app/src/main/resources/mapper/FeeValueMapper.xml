@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yulgnier.web.app.mapper.FeeValueMapper">
+
+    <select id="selectFeeValueVoListByApartmentId" resultType="com.yulgnier.web.app.vo.fee.FeeValueVo">
+        select fv.id,
+               fv.name,
+               fv.unit,
+               fv.fee_key_id,
+               fk.id   as feeKeyId,
+               fk.name as feeKeyName
+        from apartment_fee_value as afv
+                 join fee_value as fv on afv.fee_value_id = fv.id and fv.is_deleted = 0
+                 join fee_key as fk on fv.fee_key_id = fk.id and fk.is_deleted = 0
+        where afv.apartment_id = #{id}
+          and afv.is_deleted = 0
+    </select>
+</mapper>

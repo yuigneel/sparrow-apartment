@@ -44,7 +44,7 @@ public final class JwtUtil {
 
     //     临时测试
 //    public static void main(String[] args) {
-//        System.out.println(createToken(1L, "admin"));
+//        System.out.println(createToken(18800731910L, "王泽林"));
 //    }
 
 }

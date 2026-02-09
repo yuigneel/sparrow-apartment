@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yulgnier.web.app.mapper.RoomInfoMapper">
+
+
+    <resultMap id="pageItemMap" type="com.yulgnier.web.app.vo.room.RoomItemVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <association property="apartmentInfo" javaType="com.yulgnier.model.entity.ApartmentInfo" autoMapping="true">
+            <id property="id" column="ai_id"/>
+        </association>
+        <collection property="graphVoList" ofType="com.yulgnier.web.app.vo.graph.GraphVo" column="id"
+                    select="selectGraphVoListByRoomId"/>
+        <collection property="labelInfoList" ofType="com.yulgnier.model.entity.LabelInfo" column="id"
+                    select="selectLabelInfoListByRoomId"/>
+    </resultMap>
+
+
+    <select id="pageItem" resultMap="pageItemMap">
+        select ri.id,
+        ri.room_number,
+        ri.rent,
+        ai.id as ai_id,
+        ai.name,
+        ai.introduction,
+        ai.district_id,
+        ai.district_name,
+        ai.city_id,
+        ai.city_name,
+        ai.province_id,
+        ai.province_name,
+        ai.address_detail,
+        ai.latitude,
+        ai.longitude,
+        ai.phone,
+        ai.is_release
+        from room_info as ri
+        join apartment_info as ai on ai.id = ri.apartment_id and ai.is_deleted = 0 and ai.is_release = 1
+        <where>
+            ri.is_deleted = 0
+            and ri.is_release = 1
+            and ri.id not in (select room_id from lease_agreement where is_deleted = 0 and status in (2, 5))
+            <!--省市区的条件 -->
+            <if test="queryVo.provinceId != null">
+                and ai.province_id = #{queryVo.provinceId}
+            </if>
+            <if test="queryVo.cityId != null">
+                and ai.city_id = #{queryVo.cityId}
+            </if>
+            <if test="queryVo.districtId != null">
+                and ai.district_id = #{queryVo.districtId}
+            </if>
+            <!--租金条件 大于小于符号最好转义为 &gt;= &lt;= -->
+            <if test="queryVo.minRent != null">
+                and ri.rent &gt;= #{queryVo.minRent}
+            </if>
+            <if test="queryVo.maxRent != null">
+                and ri.rent &lt;= #{queryVo.maxRent}
+            </if>
+            <!--支付方式条件-->
+            <if test="queryVo.paymentTypeId != null">
+                and ri.id in(select room_id from room_payment_type where is_deleted=0 and
+                payment_type_id=#{queryVo.paymentTypeId})
+            </if>
+        </where>
+        <!--排序条件-->
+        <if test="queryVo.orderType == 'desc' or queryVo.orderType == 'asc' ">
+            order by ri.rent ${queryVo.orderType}
+        </if>
+
+    </select>
+
+    <select id="selectGraphVoListByRoomId" resultType="com.yulgnier.web.app.vo.graph.GraphVo">
+        select name,
+               url
+        from graph_info
+        where item_type = 2
+          and item_id = #{id}
+          and is_deleted = 0
+    </select>
+
+    <select id="selectLabelInfoListByRoomId" resultType="com.yulgnier.model.entity.LabelInfo">
+        select li.id,
+               li.type,
+               li.name
+        from label_info as li
+                 left join room_label as rl on rl.label_id = li.id and rl.room_id = #{id} and rl.is_deleted = 0
+        where li.is_deleted = 0
+          and li.type = 2
+    </select>
+
+    <select id="getAttrValueVoListByRoomId" resultType="com.yulgnier.web.app.vo.attr.AttrValueVo">
+        select v.id,
+               v.name,
+               v.attr_key_id,
+               k.name as attrKeyName
+        from attr_value as v
+                 join room_attr_value as r on v.id = r.attr_value_id and r.room_id = #{id} and r.is_deleted = 0
+                 join attr_key as k on v.attr_key_id = k.id and k.is_deleted = 0
+        where v.is_deleted = 0
+    </select>
+
+    <select id="selectMinRentByApartmentId" resultType="java.math.BigDecimal">
+        <!-- 核心：用 MIN() 聚合函数取最小租金 -->
+        select MIN(ri.rent)
+        from room_info as ri
+        where ri.apartment_id = #{id}  <!-- 直接通过房间的apartment_id关联，无需join公寓表，更高效 -->
+        and ri.is_deleted = 0
+        and ri.is_release = 1
+        and ri.id not in (select room_id from lease_agreement where is_deleted = 0 and status in (2, 5))
+    </select>
+
+    <select id="pageItemByApartmentId" resultMap="pageItemMap">
+        select ri.id,
+               ri.room_number,
+               ri.rent,
+               ai.id as ai_id,
+               ai.name,
+               ai.introduction,
+               ai.district_id,
+               ai.district_name,
+               ai.city_id,
+               ai.city_name,
+               ai.province_id,
+               ai.province_name,
+               ai.address_detail,
+               ai.latitude,
+               ai.longitude,
+               ai.phone,
+               ai.is_release
+        from room_info as ri
+                 join apartment_info as ai on ai.id = ri.apartment_id and ai.is_deleted = 0 and ai.is_release = 1
+        where ri.is_deleted = 0
+          and ri.apartment_id = #{id}
+          and ri.is_release = 1
+          and ri.id not in (select room_id from lease_agreement where is_deleted = 0 and status in (2, 5))
+    </select>
+
+
+</mapper>

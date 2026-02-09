@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yulgnier.web.app.mapper.ApartmentInfoMapper">
+
+    <resultMap id="selectApartmentItemVoByIdMap" type="com.yulgnier.web.app.vo.apartment.ApartmentItemVo">
+        <id property="id" column="id"/>
+        <collection property="labelInfoList" ofType="com.yulgnier.model.entity.LabelInfo" column="id" select="selectApartmentLabelInfoListById"/>
+        <collection property="graphVoList" ofType="com.yulgnier.web.app.vo.graph.GraphVo" column="id" select="selectApartmentGraphVoListById"/>
+    </resultMap>
+
+    <select id="selectFacilityInfoListByApartmentId" resultType="com.yulgnier.model.entity.FacilityInfo">
+        select fi.id, fi.type, fi.name, fi.icon
+        from apartment_facility as af
+                 left join facility_info as fi on af.facility_id = fi.id and fi.is_deleted = 0
+        where af.apartment_id = #{id}
+          and af.is_deleted = 0
+    </select>
+
+    <select id="selectApartmentItemVoById" resultMap="selectApartmentItemVoByIdMap">
+        select MIN(ri.rent) as "minRent",
+               ai.id as id
+        from room_info as ri
+                 join apartment_info as ai
+                      on ri.apartment_id = ai.id and ai.is_deleted = 0 and ai.is_release = 1 and ai.id = #{id}
+        where ri.is_deleted = 0
+          and ri.is_release = 1
+    </select>
+
+    <select id="selectApartmentGraphVoListById" resultType="com.yulgnier.web.app.vo.graph.GraphVo">
+        select name,
+               url
+        from graph_info
+        where item_type = 1
+          and item_id = #{id}
+          and is_deleted = 0
+    </select>
+    
+    <select id="selectApartmentLabelInfoListById" resultType="com.yulgnier.model.entity.LabelInfo">
+        select li.id,
+               li.type,
+               li.name
+        from apartment_label as al
+                  join label_info as li on al.label_id = li.id and li.is_deleted = 0
+        where al.apartment_id = #{id}
+          and al.is_deleted = 0
+    </select>
+
+</mapper>
