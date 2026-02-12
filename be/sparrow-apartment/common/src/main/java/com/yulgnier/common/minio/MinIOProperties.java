@@ -19,6 +19,54 @@ public class MinIOProperties {
     private Boolean secure;      // 是否启用HTTPS
     private Boolean pathStyleAccess; // 是否启用路径样式访问
 
+    // 手动添加getter/setter方法
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public Boolean getSecure() {
+        return secure;
+    }
+
+    public void setSecure(Boolean secure) {
+        this.secure = secure;
+    }
+
+    public Boolean getPathStyleAccess() {
+        return pathStyleAccess;
+    }
+
+    public void setPathStyleAccess(Boolean pathStyleAccess) {
+        this.pathStyleAccess = pathStyleAccess;
+    }
 
     /**
      // 临时调试方法：Bean初始化后执行的方法，验证是否被Spring扫描到

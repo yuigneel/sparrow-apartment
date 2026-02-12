@@ -20,6 +20,18 @@ public class Result<T> {
     public Result() {
     }
 
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
     private static <T> Result<T> build(T data) {
         Result<T> result = new Result<>();
         if (data != null)

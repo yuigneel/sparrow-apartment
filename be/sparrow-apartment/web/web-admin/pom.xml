@@ -10,9 +10,14 @@
     </parent>
 
     <artifactId>web-admin</artifactId>
+    <packaging>jar</packaging> <!--  如果不指定包类型，默认继承父 pom.xml 的打包类型 -->
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
 

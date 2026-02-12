@@ -28,6 +28,8 @@ import java.util.List;
 @RequestMapping("/admin/apartment")
 public class ApartmentController {
 
+    // 使用 Lombok @Slf4j 自动生成的 log 字段
+
     @Autowired
     private ApartmentInfoService apartmentInfoService;
 

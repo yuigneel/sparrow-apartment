@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>model</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
 
@@ -30,6 +31,10 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
     </dependencies>
 

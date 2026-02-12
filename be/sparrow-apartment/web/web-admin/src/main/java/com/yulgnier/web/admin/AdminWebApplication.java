@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * '@MapperScan("com.yulgnier.web.admin.mapper")：自动扫描当前包及子包下的Mapper接口'
  */
 @SpringBootApplication(scanBasePackages = {"com.yulgnier.web.admin", "com.yulgnier.common.minio",
-        "com.yulgnier.common.exception", "com.yulgnier.common.mybatisplus"})
+        "com.yulgnier.common.exception", "com.yulgnier.common.mybatisplus","com.yulgnier.common.redis"})
 @MapperScan("com.yulgnier.web.admin.mapper")
 @EnableScheduling // 开启定时任务
 public class AdminWebApplication {

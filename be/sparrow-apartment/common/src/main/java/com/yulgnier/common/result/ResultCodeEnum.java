@@ -46,6 +46,14 @@ public enum ResultCodeEnum {
 
     private final String message;
 
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     ResultCodeEnum(Integer code, String message) {
         this.code = code;
         this.message = message;
