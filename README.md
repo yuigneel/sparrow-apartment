@@ -2,8 +2,7 @@
 我的第二个后端实战项目，教程来自哔哩哔哩的黑马up，后端是自己一点点写出来的，虽然不太完美，但值得纪念！前端代码来自黑马公众号的公开资料。
 
 ———————————yulgnier
-                                                                      ![Stone Badge](https://stone.professorlee.work/api/stone/yulgnier/sparrow-apartment)
-
+                                                                                                           ![Stone Badge](https://stone.professorlee.work/api/stone/yulgnier/sparrow-apartment)
 
 
 ### English Version
