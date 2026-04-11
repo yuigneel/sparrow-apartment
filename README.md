@@ -7,4 +7,8 @@
 This is my second practical back-end project. The tutorial was from the Heima (Black Horse) UP creator on Bilibili, and I wrote the back-end code bit by bit all by myself. Though it’s not perfect, it’s definitely worth commemorating! The front-end code is sourced from the public materials on Heima’s official WeChat Official Account.
 
 ———————————Translated by Doubao AI
-                                                                                               ![Stone Badge](https://stone.professorlee.work/api/stone/yulgnier/sparrow-apartment)
+
+
+
+
+![Stone Badge](https://stone.professorlee.work/api/stone/yulgnier/sparrow-apartment)                                                                                                                                                      
