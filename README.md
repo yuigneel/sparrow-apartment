@@ -26,8 +26,6 @@
 <p align="center"><img src="https://stone.professorlee.work/api/stone/yuigneel/sparrow-apartment" /></p>
 <p align="center"><strong>石墩子</strong></p>  
 
----  
-
 <p align="center"><img src="https://github.com/user-attachments/assets/5e27b353-80c2-48c0-83a1-3ed0d6691c03" /></p>
 <p align="center"><strong>小傻狗</strong></p>    
 
@@ -59,7 +57,6 @@
 - **保留署名** - 使用和修改代码时必须声明原作者
 - **开源要求** - 无论本地部署还是作为API服务，都必须保持开源
 
----  
 
 ### 许可证声明
 
