@@ -1,6 +1,5 @@
 package com.yulgnier.common.minio;
 
-
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.http.Method;
